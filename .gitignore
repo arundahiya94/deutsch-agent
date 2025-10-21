@@ -205,3 +205,12 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+# Ignore node modules if using Node.js within Python projects
+node_modules/
+**/node_modules/
+
+# Ignore the .next directory if using Next.js within Python projects
+.next/
+**/.next/
