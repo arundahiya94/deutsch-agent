@@ -22,7 +22,6 @@ const levelGroups = [
   {
     levels: "A1",
     title: "Absolute Beginner",
-    description: "Basic phrases, introductions, and everyday survival topics.",
     icon: "👶",
     path: "/level/a1",
     gradient: "from-green-300 to-emerald-400",
@@ -30,7 +29,6 @@ const levelGroups = [
   {
     levels: "A2",
     title: "Elementary",
-    description: "Simple and direct exchange of information on familiar matters.",
     icon: "🌱",
     path: "/level/a2",
     gradient: "from-green-400 to-blue-500",
@@ -38,7 +36,6 @@ const levelGroups = [
   {
     levels: "B1",
     title: "Intermediate",
-    description: "Handling most travel situations and describing experiences/goals.",
     icon: "🌳",
     path: "/level/b1",
     gradient: "from-yellow-400 to-orange-500",
@@ -46,7 +43,6 @@ const levelGroups = [
   {
     levels: "B2",
     title: "Upper Intermediate",
-    description: "Fluent and spontaneous interaction; clear, detailed communication.",
     icon: "🌟",
     path: "/level/b2",
     gradient: "from-orange-500 to-red-600",
@@ -54,7 +50,6 @@ const levelGroups = [
   {
     levels: "C1",
     title: "Advanced",
-    description: "Flexible and effective use of language for social and professional purposes.",
     icon: "🎓",
     path: "/level/c1",
     gradient: "from-purple-500 to-indigo-600",
@@ -62,14 +57,13 @@ const levelGroups = [
   {
     levels: "C2",
     title: "Mastery",
-    description: "Near-native competence; handling sophisticated and nuanced arguments.",
     icon: "👑",
     path: "/level/c2",
     gradient: "from-pink-500 to-fuchsia-600",
   },
 ];
 
-const LevelCard = ({ levels, title, description, icon, path, gradient }) => (
+const LevelCard = ({ levels, title, icon, path, gradient }) => (
   <Link
     href={path}
     className={`
@@ -86,7 +80,6 @@ const LevelCard = ({ levels, title, description, icon, path, gradient }) => (
     <div className="text-xl font-extrabold tracking-tight mt-1">{levels}</div>
     <div className="text-sm font-semibold uppercase opacity-90">{title}</div>
     <p className="mt-1 text-center text-xs opacity-80 line-clamp-2 px-1">
-      {description}
     </p>
   </Link>
 );
