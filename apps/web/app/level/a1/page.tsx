@@ -17,7 +17,7 @@ const a1Topics = [
     number: 1,
     title: "Grüßen & Vorstellen",
     subtitle: "Greetings & Introductions",
-    description: "Names, origin, languages, and essential polite phrases (Hallo, Tschüss).",
+    description: "Names, origin, languages, polite phrases (Hallo, Tschüss).",
     icon: "🤝 🙋‍♀️", // Namaste/Folded Hands
     path: "/a1/greetings",
     color: "bg-indigo-500", 
@@ -26,7 +26,7 @@ const a1Topics = [
     number: 2,
     title: "Zahlen & Zeit",
     subtitle: "Numbers, Dates, & Time",
-    description: "Counting 0-1000, telling time, and setting appointments and dates.",
+    description: "Counting 0-1000, telling time, setting appointments and dates.",
     icon: "#️⃣ ⏰", // Number symbol and Clock
     path: "/a1/numbers",
     color: "bg-pink-500", 
@@ -35,7 +35,7 @@ const a1Topics = [
     number: 3,
     title: "Familie & Wohnen",
     subtitle: "Family & Housing",
-    description: "Describing people, family members, rooms, and simple furniture.",
+    description: "Describing people, family members, rooms, simple furniture.",
     icon: "👨‍👨‍👧‍👦 🏠", // Family and House
     path: "/a1/housing",
     color: "bg-emerald-500", 
@@ -44,7 +44,7 @@ const a1Topics = [
     number: 4,
     title: "Alltag & Beruf",
     subtitle: "Daily Routine & Work",
-    description: "Talking about your day, simple job roles, and expressing basic skills.",
+    description: "Talking about your day, simple job roles, expressing basic skills.",
     icon: "🗓️ 💼", // Calendar and Briefcase (for Routine/Work)
     path: "/a1/routine",
     color: "bg-yellow-500", 
@@ -53,7 +53,7 @@ const a1Topics = [
     number: 5,
     title: "Essen & Trinken",
     subtitle: "Food, Drink, & Shopping",
-    description: "Ordering in a cafe, talking about preferences, and buying groceries.",
+    description: "Ordering in a cafe, talking about preferences, buying groceries.",
     icon: "🍔 ☕", // Burger and Coffee
     path: "/a1/food",
     color: "bg-red-500", 
@@ -62,7 +62,7 @@ const a1Topics = [
     number: 6,
     title: "Körper & Gesundheit",
     subtitle: "Body & Health",
-    description: "Naming body parts, describing simple ailments, and visiting the doctor.",
+    description: "Naming body parts, describing simple ailments, visiting the doctor.",
     icon: "💪 ❤️", // Muscle and Heart
     path: "/a1/body",
     color: "bg-cyan-600", 
@@ -71,7 +71,7 @@ const a1Topics = [
     number: 7,
     title: "Kleidung & Farben",
     subtitle: "Clothes & Colors",
-    description: "Describing what you wear, colors, and discussing simple clothing needs.",
+    description: "Describing what you wear, colors, discussing simple clothing needs.",
     icon: "👗 👕", // Dress and T-Shirt
     path: "/a1/clothes",
     color: "bg-orange-500", 
@@ -80,7 +80,7 @@ const a1Topics = [
     number: 8,
     title: "Wetter & Jahreszeiten",
     subtitle: "Weather & Seasons",
-    description: "Describing basic weather conditions and talking about the four seasons.",
+    description: "Describing basic weather conditions, talking about the four seasons.",
     icon: "🌤️ 🍁", // SSun, Autumn
     path: "/a1/weather",
     color: "bg-green-500", 
@@ -89,7 +89,7 @@ const a1Topics = [
     number: 9,
     title: "Ferien & Urlaub",
     subtitle: "Holidays & Vacation",
-    description: "Talking about holiday plans, destinations, and travel activities.",
+    description: "Talking about holiday plans, destinations, travel activities.",
     icon: "✈️ 🎡", // Plane and Ferris Wheel
     path: "/a1/travel",
     color: "bg-purple-500", 
