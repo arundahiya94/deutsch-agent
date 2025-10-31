@@ -1,0 +1,19 @@
+[project]
+name = "deutsch-agent-api"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "pydantic>=2",
+  "python-dotenv",
+  "loguru",
+  "structlog",
+  "rank-bm25",
+  "reportlab",
+  "langchain",
+  "langgraph",
+]
+
+[tool.black]
+line-length = 100
