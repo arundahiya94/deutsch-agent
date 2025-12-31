@@ -1,196 +1,238 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
-// Mock Link component for single-file use to avoid 'next/link' import error
+// Mock Link component for single-file use (required since we cannot import next/link)
 const Link = ({ href, className, children }) => (
-  <a href={href} className={className}>
+  <a href={href} className={className} onClick={(e) => {
+    // Prevent navigation for demonstration purposes
+    e.preventDefault();
+    console.log(`Navigating to: ${href}`);
+  }}>
     {children}
   </a>
 );
 
-// --- C1 Topics Data with Sequential Learning Order ---
+// --- Emoji Icon Definitions (Consistent 7xl size) ---
+
+// 1. Nominalisierung & Redewendungen (Nominalization & Phrases)
+const IconNominal = () => <span className="text-7xl">🔄 💡</span>;
+// 2. Rhetorik & Argumentstruktur (Rhetoric & Argument Structure)
+const IconRhetoric = () => <span className="text-7xl">🏛️ 🗣️</span>;
+// 3. Akademisches Schreiben (Academic Writing)
+const IconAcademic = () => <span className="text-7xl">🖋️ 📜</span>;
+// 4. Feinanalyse von Texten (Fine Text Analysis)
+const IconAnalysis = () => <span className="text-7xl">🧐 🔎</span>;
+// 5. Ethik & Moralfragen (Ethics & Moral Questions)
+const IconEthics = () => <span className="text-7xl">😇 😈</span>;
+// 6. Politik & Verwaltung (Politics & Administration)
+const IconPolitics = () => <span className="text-7xl">🗳️ 🏢</span>;
+// 7. Sprachliche Varietäten (Linguistic Varieties)
+const IconVarieties = () => <span className="text-7xl">🇩🇪 🇦🇹 🇨🇭</span>;
+// 8. Kulturelles Erbe (Cultural Heritage)
+const IconHeritage = () => <span className="text-7xl">🏛️ 🖼️</span>;
+// 9. Bedingungssätze (Conditional Clauses)
+const IconConditional = () => <span className="text-7xl">❓ ➡️</span>;
+// 10. Sprachstil & Register (Language Style & Register)
+const IconRegister = () => <span className="text-7xl">🤵 🗣️</span>;
+
+
+// --- Topic Data (C1) ---
+
 const c1Topics = [
   {
     number: 1,
-    title: "Modalpartikeln & Nuance",
-    subtitle: "Mastering Subtlety (ja, doch, wohl)",
-    description: "Achieving native-like expression by correctly using modal particles to convey tone and attitude.",
-    icon: "✨ 🗣️", // Sparkle and Speaking Head
-    path: "/c1/modals",
-    color: "bg-purple-700", 
+    title: "Nominalisierung & Redewendungen",
+    description: "Converting verbs to nouns and mastering complex German phrases.",
+    icon: <IconNominal />,
+    color: "bg-indigo-700", 
+    path: "nominal-phrases",
   },
   {
     number: 2,
-    title: "Passiv Ersatzformen",
-    subtitle: "Complex Passive Alternatives",
-    description: "Using fixed expressions (z.B. infrage kommen) and verbal nouns to avoid overusing the Passive voice.",
-    icon: "🔄 📑", // Clockwise Arrows and Document
-    path: "/c1/passive_alternatives",
-    color: "bg-red-600", 
+    title: "Rhetorik & Argumentstruktur",
+    description: "Using advanced rhetorical devices to construct compelling arguments.",
+    icon: <IconRhetoric />,
+    color: "bg-fuchsia-700",
+    path: "rhetoric-structure",
   },
   {
     number: 3,
-    title: "Abstrakte Nominalisierung",
-    subtitle: "High-Level Noun Forms",
-    description: "Mastering the academic style of converting complex actions into abstract noun phrases.",
-    icon: "🧠 🔗", // Brain and Link
-    path: "/c1/abstract_nouns",
-    color: "bg-cyan-700", 
+    title: "Akademisches Schreiben",
+    description: "Drafting papers, reports, and summaries with formal German syntax.",
+    icon: <IconAcademic />,
+    color: "bg-teal-700",
+    path: "academic-writing",
   },
   {
     number: 4,
-    title: "Wissenschaftliches Schreiben",
-    subtitle: "Academic & Research Reports",
-    description: "Structuring scientific papers, using formal tone, handling citation and bibliography.",
-    icon: "🔬 🎓", // Microscope and Graduation Cap
-    path: "/c1/academic_writing",
-    color: "bg-teal-600", 
+    title: "Feinanalyse von Texten",
+    description: "Analyzing subtext, tone, and author intention in literary/complex texts.",
+    icon: <IconAnalysis />,
+    color: "bg-orange-700",
+    path: "text-analysis",
   },
   {
     number: 5,
-    title: "Kultur & Gesellschaftskritik",
-    subtitle: "Complex Cultural Analysis",
-    description: "Discussing stereotypes, social integration, forming highly nuanced opinions on cultural identity.",
-    icon: "🎭 👤", // Theatre Masks and Silhouette
-    path: "/c1/culture_critique",
-    color: "bg-fuchsia-700", 
+    title: "Ethik & Moralfragen",
+    description: "Discussing complex ethical dilemmas and moral philosophy.",
+    icon: <IconEthics />,
+    color: "bg-red-700",
+    path: "ethics-moral",
   },
   {
     number: 6,
-    title: "Politische Rhetorik",
-    subtitle: "Analyzing Political Discourse",
-    description: "Critically evaluating political speeches, understanding biases, and participating in formal political debate.",
-    icon: "📢 🏛️", // Megaphone and Classical Building
-    path: "/c1/rhetoric",
-    color: "bg-lime-600", 
+    title: "Politik & Verwaltung",
+    description: "Understanding German political discourse and administrative processes.",
+    icon: <IconPolitics />,
+    color: "bg-cyan-700",
+    path: "politics-admin",
   },
   {
     number: 7,
-    title: "Medienethik & Digitalisierung",
-    subtitle: "Digital Ethics & Data Privacy",
-    description: "Discussing the societal impact of AI, data security, the ethics of modern technology.",
-    icon: "💻 🛡️", // Laptop and Shield
-    path: "/c1/digital_ethics",
-    color: "bg-amber-600", 
+    title: "Sprachliche Varietäten",
+    description: "Identifying and adapting to regional dialects (Mundarten) and standards.",
+    icon: <IconVarieties />,
+    color: "bg-green-700",
+    path: "language-varieties",
   },
   {
     number: 8,
-    title: "Philosophische Konzepte",
-    subtitle: "Discussing Abstract Ideas",
-    description: "Debating concepts like freedom, justice, morality with precise and abstract vocabulary.",
-    icon: "🤔 💡", // Thinking Face and Light Bulb
-    path: "/c1/philosophy",
-    color: "bg-rose-500", 
+    title: "Kulturelles Erbe",
+    description: "Discussing key figures, historical periods, and cultural contributions.",
+    icon: <IconHeritage />,
+    color: "bg-purple-700",
+    path: "cultural-heritage",
   },
   {
     number: 9,
-    title: "Linguistische Register",
-    subtitle: "Formal vs. Informal Style",
-    description: "Recognizing and appropriately switching between highly formal, standard, colloquial German.",
-    icon: "🗣️ 🎩", // Speaking Head and Top Hat
-    path: "/c1/register",
-    color: "bg-gray-800", 
+    title: "Bedingungssätze (Konjunktiv II)",
+    description: "Mastering advanced hypothetical and conditional statements.",
+    icon: <IconConditional />,
+    color: "bg-yellow-700",
+    path: "conditional-clauses",
   },
   {
     number: 10,
-    title: "Finanzmärkte & Ökonomie",
-    subtitle: "Complex Finance and Economy",
-    description: "Understanding financial reports, discussing investment strategies, explaining economic theories.",
-    icon: "📊 🏦", // Bar Chart and Bank
-    path: "/c1/finance",
-    color: "bg-indigo-700", 
+    title: "Sprachstil & Register",
+    description: "Adjusting language use for formal, informal, or technical audiences.",
+    icon: <IconRegister />,
+    color: "bg-gray-700",
+    path: "style-register",
   },
 ];
 
-const TopicCard = ({ number, title, subtitle, description, icon, path, color, backgroundImage }) => {
-  const isImageBackground = !!backgroundImage; 
+
+// --- Sub-Components (Reused from A1/B1) ---
+
+const ActionLink = ({ href, children, color, icon }) => (
+  <Link
+    href={href}
+    className={`flex flex-col items-center justify-center p-3 rounded-lg text-center shadow-md transition hover:scale-[1.03] hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-opacity-50 ${color} text-white`}
+    style={{ minHeight: '80px' }}
+  >
+    <span className="text-2xl">{icon}</span>
+    <span className="text-sm font-semibold mt-1">{children}</span>
+  </Link>
+);
+
+const TopicCard = ({ number, title, description, icon, color, levelPath }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Define the action buttons array
+  const actions = [
+    { name: "Learn", route: `${levelPath}/learn`, color: "bg-indigo-600", icon: "🧠" },
+    { name: "Practice", route: `${levelPath}/practice`, color: "bg-teal-600", icon: "📝" },
+    { name: "Read", route: `${levelPath}/read`, color: "bg-yellow-600", icon: "📚" },
+    { name: "See", route: `${levelPath}/see`, color: "bg-red-600", icon: "📺" },
+  ];
 
   return (
-    <Link
-      href={path}
-      className={`
-        group flex flex-col p-6 w-full h-full min-h-[200px]
-        rounded-2xl shadow-lg transition transform hover:scale-[1.02] duration-300
-        relative overflow-hidden cursor-pointer text-left
-        text-white
-        ${isImageBackground ? 'bg-gray-800' : color} 
-      `}
-      style={{ 
-        backgroundImage: isImageBackground ? `url(${backgroundImage})` : 'none',
-        backgroundSize: isImageBackground ? 'cover' : 'auto',
-        backgroundPosition: isImageBackground ? 'center' : 'auto',
-      }}
-    >
-      {/* Overlay for text readability on image backgrounds */}
-      {isImageBackground && (
-        <div className={`absolute inset-0 ${color} opacity-70 group-hover:opacity-80 transition duration-300 rounded-2xl`}></div>
-      )}
-
-      {/* Content wrapper to ensure text is above the background/overlay */}
-      <div className="relative z-10 flex flex-col h-full">
-        {/* Number and Icon */}
-        <div className="flex items-center mb-3">
-          <span className="text-3xl font-extrabold mr-3">{number}.</span>
-          <div className="text-7xl transition-all group-hover:rotate-3 duration-300 leading-none"> 
-              {icon}
-          </div>
+    <div className="rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden bg-white border-4 border-white">
+      
+      {/* Main Card Header (Clickable Area) */}
+      <div 
+        className={`p-6 cursor-pointer ${color} text-white transition duration-300 ease-in-out`}
+        onClick={() => setIsExpanded(!isExpanded)}
+        style={{
+            minHeight: '150px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+        }}
+      >
+        <div className="flex items-center justify-center space-x-4 w-full">
+            <span className="text-4xl font-extrabold opacity-70">
+                {number}.
+            </span>
+            <div className="text-center">
+                <h2 className="text-2xl font-bold">{title}</h2>
+                <p className="text-sm opacity-90 mt-1">{description}</p>
+            </div>
         </div>
-        
-        {/* Titles */}
-        <h2 className="text-2xl font-bold tracking-tight mt-1">{title}</h2>
-        <h3 className="text-sm font-medium uppercase opacity-80 mb-2">{subtitle}</h3>
-        
-        {/* Description */}
-        <p className="mt-2 text-sm opacity-90">
-          {description}
-        </p>
-
-        {/* CTA Arrow */}
-        <div className="mt-auto pt-3 text-sm font-semibold flex items-center">
-            Generate Content 
-            <span className="ml-2 transition-transform group-hover:translate-x-1 duration-300">→</span>
+        <div className="mt-2 text-center">
+            {icon}
         </div>
       </div>
-    </Link>
+
+      {/* Action Bar (Expanded Content) */}
+      <div 
+        className={`p-4 transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden bg-gray-50`}
+      >
+        <div className="grid grid-cols-2 gap-3">
+          {actions.map((action, index) => (
+            <ActionLink
+              key={index}
+              href={action.route}
+              color={action.color}
+              icon={action.icon}
+            >
+              {action.name}
+            </ActionLink>
+          ))}
+        </div>
+        <div className="mt-4 text-center text-xs text-gray-500">
+             <span className="font-semibold">Click the card header again to close.</span>
+        </div>
+      </div>
+    </div>
   );
 };
 
 
+// --- Main Component ---
+
 const C1TopicsPage = () => {
+  const level = "C1";
+  const levelDescription = "You can express yourself fluently and spontaneously, and use language flexibly and effectively for social, academic and professional purposes.";
+
   return (
-    <main className="flex min-h-screen flex-col items-center px-4 py-16 bg-gray-100">
-      
-      {/* Header and Back Button */}
-      <div className="w-full max-w-7xl mb-8">
-        <Link 
-          href="/" 
-          className="text-indigo-600 hover:text-indigo-800 transition duration-150 font-medium flex items-center"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 mr-1">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-          </svg>
-          Back to Levels
-        </Link>
+    <main className="flex min-h-screen flex-col items-center px-4 py-16 bg-gray-50">
+      <div className="w-full max-w-6xl">
+        <h1 className="text-5xl font-extrabold text-gray-900 text-center mb-4">
+          Deutsch Agent: <span className="text-indigo-600">{level} Topics</span>
+        </h1>
+        <p className="max-w-3xl mx-auto text-gray-600 text-lg text-center mb-12">
+          {levelDescription}
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {c1Topics.map((topic) => (
+            <TopicCard
+              key={topic.number}
+              number={topic.number}
+              title={topic.title}
+              description={topic.description}
+              icon={topic.icon}
+              color={topic.color}
+              levelPath={`/level/${level.toLowerCase()}/${topic.path}`}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Title Section */}
-      <h1 className="bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-5xl font-extrabold text-transparent sm:text-6xl text-center">
-        C1: Advanced Topics
-      </h1>
-      
-      <p className="mt-4 max-w-3xl text-gray-600 text-lg text-center mb-12">
-        Achieve high-level proficiency! Master nuanced language use, complex grammar, and engage in sophisticated academic and professional discourse.
-      </p>
-
-      {/* Topics Grid (2 columns on small/medium, 3 on large) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl p-4">
-        {c1Topics.map((topic) => (
-          <TopicCard key={topic.number} {...topic} />
-        ))}
-      </div>
-
-      {/* Footer (simple) */}
       <footer className="mt-20 text-sm text-gray-400">
         © {new Date().getFullYear()} DeutschAgent
       </footer>

@@ -1,196 +1,238 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
-// Mock Link component for single-file use to avoid 'next/link' import error
+// Mock Link component for single-file use (required since we cannot import next/link)
 const Link = ({ href, className, children }) => (
-  <a href={href} className={className}>
+  <a href={href} className={className} onClick={(e) => {
+    // Prevent navigation for demonstration purposes
+    e.preventDefault();
+    console.log(`Navigating to: ${href}`);
+  }}>
     {children}
   </a>
 );
 
-// --- C2 Topics Data with Sequential Learning Order ---
+// --- Emoji Icon Definitions (Consistent 7xl size) ---
+
+// 1. Literarische Analyse & Stilistik (Literary Analysis & Stylistics)
+const IconLiterary = () => <span className="text-7xl">🖋️ 🎭</span>;
+// 2. Redundanz & Präzision (Redundancy & Precision)
+const IconPrecision = () => <span className="text-7xl">🎯 ✂️</span>;
+// 3. Wissenschafts- und Fachjargon (Scientific & Technical Jargon)
+const IconJargon = () => <span className="text-7xl">🧪 ⚙️</span>;
+// 4. Historische Texte & Dialekte (Historical Texts & Dialects)
+const IconHistory = () => <span className="text-7xl">📜 🗣️</span>;
+// 5. Interkulturelle Kompetenz (Intercultural Competence)
+const IconIntercultural = () => <span className="text-7xl">🧠 🌍</span>;
+// 6. Fehlermanagement & Korrektur (Error Management & Correction)
+const IconError = () => <span className="text-7xl">❌ ✅</span>;
+// 7. Sprachphilosophie (Philosophy of Language)
+const IconPhilosophy = () => <span className="text-7xl">🌌 💬</span>;
+// 8. Komplexe Textsorten (Complex Text Genres - e.g., legal, bureaucratic)
+const IconComplexText = () => <span className="text-7xl">📄 📑</span>;
+// 9. Zitate & Quellen (Citations & Sources)
+const IconCitations = () => <span className="text-7xl">"" 📚</span>;
+// 10. Kreatives Schreiben & Humor (Creative Writing & Humor/Irony)
+const IconCreative = () => <span className="text-7xl">✨ 😂</span>;
+
+
+// --- Topic Data (C2) ---
+
 const c2Topics = [
   {
     number: 1,
-    title: "Stilistik & Redewendungen",
-    subtitle: "Idioms, Proverbs, & Sophisticated Style",
-    description: "Effortlessly using native-like idioms, proverbs, nuanced rhetorical figures for impact.",
-    icon: "🖋️ 💡", // Fountain Pen and Lightbulb
-    path: "/c2/stylistics",
-    color: "bg-gray-800", 
+    title: "Literarische Analyse & Stilistik",
+    description: "Deep analysis of literary devices, style, and subtext in advanced texts.",
+    icon: <IconLiterary />,
+    color: "bg-red-800", 
+    path: "literary-analysis",
   },
   {
     number: 2,
-    title: "Seltene Grammatikformen",
-    subtitle: "Advanced/Obscure Grammar",
-    description: "Mastering subtle and complex grammatical forms like advanced Genitiv usage and outdated verb patterns.",
-    icon: "💎 ⚙️", // Diamond and Gear
-    path: "/c2/rare_grammar",
-    color: "bg-fuchsia-600", 
+    title: "Redundanz & Präzision",
+    description: "Eliminating filler words and achieving maximum expressive precision.",
+    icon: <IconPrecision />,
+    color: "bg-pink-800",
+    path: "precision-redundancy",
   },
   {
     number: 3,
-    title: "Textzusammenfassung & Synthese",
-    subtitle: "Synthesizing Complex Sources",
-    description: "Summarizing information from multiple complex, specialized sources, synthesizing them into a coherent argument.",
-    icon: "📚 ✂️", // Books and Scissors
-    path: "/c2/synthesis",
-    color: "bg-teal-700", 
+    title: "Wissenschafts- und Fachjargon",
+    description: "Mastering highly specialized vocabulary and professional terminology.",
+    icon: <IconJargon />,
+    color: "bg-purple-800",
+    path: "jargon-technical",
   },
   {
     number: 4,
-    title: "Kontroverse Debatten",
-    subtitle: "Leading Expert-Level Debates",
-    description: "Structuring and leading complex, high-stakes arguments across a range of highly specialized topics.",
-    icon: "⚔️ 🧐", // Crossed Swords and Monocle
-    path: "/c2/master_debate",
-    color: "bg-indigo-700", 
+    title: "Historische Texte & Dialekte",
+    description: "Comprehending older German texts and understanding dialect variations.",
+    icon: <IconHistory />,
+    color: "bg-indigo-800",
+    path: "history-dialects",
   },
   {
     number: 5,
-    title: "Interdisziplinäre Themen",
-    subtitle: "Linking Science, Arts, & History",
-    description: "Discussing connections between seemingly unrelated fields (e.g., philosophy and physics).",
-    icon: "🔬 🖼️", // Microscope and Picture Frame
-    path: "/c2/interdisciplinary",
-    color: "bg-lime-600", 
+    title: "Interkulturelle Kompetenz",
+    description: "Fluent understanding of cultural subtleties, nuance, and implication.",
+    icon: <IconIntercultural />,
+    color: "bg-blue-800",
+    path: "intercultural-competence",
   },
   {
     number: 6,
-    title: "Kreatives & Literarisches Schreiben",
-    subtitle: "Creative Expression and Literature",
-    description: "Producing original, high-quality texts, including short stories, poetry, and literary analysis.",
-    icon: "✍️ 📖", // Writing Hand and Open Book
-    path: "/c2/creative_writing",
-    color: "bg-rose-600", 
+    title: "Fehlermanagement & Korrektur",
+    description: "Self-correction strategies and advanced editing of complex documents.",
+    icon: <IconError />,
+    color: "bg-cyan-800",
+    path: "error-management",
   },
   {
     number: 7,
-    title: "Sprachliche Varietäten",
-    subtitle: "Dialects, Jargon, & Slang",
-    description: "Understanding and differentiating between regional dialects, specialized professional jargon, sociolects.",
-    icon: "👂 🗺️", // Ear and Map
-    path: "/c2/varieties",
-    color: "bg-cyan-600", 
+    title: "Sprachphilosophie",
+    description: "Debating linguistic theory, meaning, and the structure of thought.",
+    icon: <IconPhilosophy />,
+    color: "bg-teal-800",
+    path: "language-philosophy",
   },
   {
     number: 8,
-    title: "Rhetorik & Überzeugung",
-    subtitle: "Advanced Persuasion Techniques",
-    description: "Analyzing and utilizing complex rhetorical devices (e.g., anaphora, irony) for highly persuasive speech.",
-    icon: "👑 🎤", // Crown and Microphone
-    path: "/c2/rhetoric_mastery",
-    color: "bg-amber-600", 
+    title: "Komplexe Textsorten",
+    description: "Analyzing and writing specialized genres (legal, contracts, official notices).",
+    icon: <IconComplexText />,
+    color: "bg-green-800",
+    path: "complex-genres",
   },
   {
     number: 9,
-    title: "Historische Texte",
-    subtitle: "Reading Older/Dated Language",
-    description: "Comprehending texts with older vocabulary, complex sentence structures, and historical context.",
-    icon: "⏳ 📜", // Hourglass and Scroll
-    path: "/c2/historical_texts",
-    color: "bg-green-700", 
+    title: "Zitate & Quellen",
+    description: "Properly integrating quotes, citing sources, and academic integrity.",
+    icon: <IconCitations />,
+    color: "bg-lime-800",
+    path: "citations-sources",
   },
   {
     number: 10,
-    title: "Globales Krisenmanagement",
-    subtitle: "Diplomacy & International Relations",
-    description: "Discussing complex international crises, foreign policy, diplomatic strategies with expert vocabulary.",
-    icon: "🌍 🚨", // Globe and Siren
-    path: "/c2/crisis_management",
-    color: "bg-pink-700", 
+    title: "Kreatives Schreiben & Humor",
+    description: "Mastering irony, sarcasm, and generating sophisticated creative texts.",
+    icon: <IconCreative />,
+    color: "bg-gray-800",
+    path: "creative-humor",
   },
 ];
 
-const TopicCard = ({ number, title, subtitle, description, icon, path, color, backgroundImage }) => {
-  const isImageBackground = !!backgroundImage; 
+
+// --- Sub-Components (Reused from A1/B1) ---
+
+const ActionLink = ({ href, children, color, icon }) => (
+  <Link
+    href={href}
+    className={`flex flex-col items-center justify-center p-3 rounded-lg text-center shadow-md transition hover:scale-[1.03] hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-opacity-50 ${color} text-white`}
+    style={{ minHeight: '80px' }}
+  >
+    <span className="text-2xl">{icon}</span>
+    <span className="text-sm font-semibold mt-1">{children}</span>
+  </Link>
+);
+
+const TopicCard = ({ number, title, description, icon, color, levelPath }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Define the action buttons array
+  const actions = [
+    { name: "Learn", route: `${levelPath}/learn`, color: "bg-indigo-600", icon: "🧠" },
+    { name: "Practice", route: `${levelPath}/practice`, color: "bg-teal-600", icon: "📝" },
+    { name: "Read", route: `${levelPath}/read`, color: "bg-yellow-600", icon: "📚" },
+    { name: "See", route: `${levelPath}/see`, color: "bg-red-600", icon: "📺" },
+  ];
 
   return (
-    <Link
-      href={path}
-      className={`
-        group flex flex-col p-6 w-full h-full min-h-[200px]
-        rounded-2xl shadow-lg transition transform hover:scale-[1.02] duration-300
-        relative overflow-hidden cursor-pointer text-left
-        text-white
-        ${isImageBackground ? 'bg-gray-800' : color} 
-      `}
-      style={{ 
-        backgroundImage: isImageBackground ? `url(${backgroundImage})` : 'none',
-        backgroundSize: isImageBackground ? 'cover' : 'auto',
-        backgroundPosition: isImageBackground ? 'center' : 'auto',
-      }}
-    >
-      {/* Overlay for text readability on image backgrounds */}
-      {isImageBackground && (
-        <div className={`absolute inset-0 ${color} opacity-70 group-hover:opacity-80 transition duration-300 rounded-2xl`}></div>
-      )}
-
-      {/* Content wrapper to ensure text is above the background/overlay */}
-      <div className="relative z-10 flex flex-col h-full">
-        {/* Number and Icon */}
-        <div className="flex items-center mb-3">
-          <span className="text-3xl font-extrabold mr-3">{number}.</span>
-          <div className="text-7xl transition-all group-hover:rotate-3 duration-300 leading-none"> 
-              {icon}
-          </div>
+    <div className="rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden bg-white border-4 border-white">
+      
+      {/* Main Card Header (Clickable Area) */}
+      <div 
+        className={`p-6 cursor-pointer ${color} text-white transition duration-300 ease-in-out`}
+        onClick={() => setIsExpanded(!isExpanded)}
+        style={{
+            minHeight: '150px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+        }}
+      >
+        <div className="flex items-center justify-center space-x-4 w-full">
+            <span className="text-4xl font-extrabold opacity-70">
+                {number}.
+            </span>
+            <div className="text-center">
+                <h2 className="text-2xl font-bold">{title}</h2>
+                <p className="text-sm opacity-90 mt-1">{description}</p>
+            </div>
         </div>
-        
-        {/* Titles */}
-        <h2 className="text-2xl font-bold tracking-tight mt-1">{title}</h2>
-        <h3 className="text-sm font-medium uppercase opacity-80 mb-2">{subtitle}</h3>
-        
-        {/* Description */}
-        <p className="mt-2 text-sm opacity-90">
-          {description}
-        </p>
-
-        {/* CTA Arrow */}
-        <div className="mt-auto pt-3 text-sm font-semibold flex items-center">
-            Generate Content 
-            <span className="ml-2 transition-transform group-hover:translate-x-1 duration-300">→</span>
+        <div className="mt-2 text-center">
+            {icon}
         </div>
       </div>
-    </Link>
+
+      {/* Action Bar (Expanded Content) */}
+      <div 
+        className={`p-4 transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden bg-gray-50`}
+      >
+        <div className="grid grid-cols-2 gap-3">
+          {actions.map((action, index) => (
+            <ActionLink
+              key={index}
+              href={action.route}
+              color={action.color}
+              icon={action.icon}
+            >
+              {action.name}
+            </ActionLink>
+          ))}
+        </div>
+        <div className="mt-4 text-center text-xs text-gray-500">
+             <span className="font-semibold">Click the card header again to close.</span>
+        </div>
+      </div>
+    </div>
   );
 };
 
 
+// --- Main Component ---
+
 const C2TopicsPage = () => {
+  const level = "C2";
+  const levelDescription = "You can understand with ease virtually everything heard or read. You can summarize information from different spoken and written sources, reconstructing arguments and accounts in a coherent presentation.";
+
   return (
-    <main className="flex min-h-screen flex-col items-center px-4 py-16 bg-gray-100">
-      
-      {/* Header and Back Button */}
-      <div className="w-full max-w-7xl mb-8">
-        <Link 
-          href="/" 
-          className="text-indigo-600 hover:text-indigo-800 transition duration-150 font-medium flex items-center"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 mr-1">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-          </svg>
-          Back to Levels
-        </Link>
+    <main className="flex min-h-screen flex-col items-center px-4 py-16 bg-gray-50">
+      <div className="w-full max-w-6xl">
+        <h1 className="text-5xl font-extrabold text-gray-900 text-center mb-4">
+          Deutsch Agent: <span className="text-indigo-600">{level} Topics</span>
+        </h1>
+        <p className="max-w-3xl mx-auto text-gray-600 text-lg text-center mb-12">
+          {levelDescription}
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {c2Topics.map((topic) => (
+            <TopicCard
+              key={topic.number}
+              number={topic.number}
+              title={topic.title}
+              description={topic.description}
+              icon={topic.icon}
+              color={topic.color}
+              levelPath={`/level/${level.toLowerCase()}/${topic.path}`}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Title Section */}
-      <h1 className="bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-5xl font-extrabold text-transparent sm:text-6xl text-center">
-        C2: Mastery Topics
-      </h1>
-      
-      <p className="mt-4 max-w-3xl text-gray-600 text-lg text-center mb-12">
-        Achieve native-like competence! Focus on complex style, nuance, literary analysis, and effortless command of the entire language.
-      </p>
-
-      {/* Topics Grid (2 columns on small/medium, 3 on large) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl p-4">
-        {c2Topics.map((topic) => (
-          <TopicCard key={topic.number} {...topic} />
-        ))}
-      </div>
-
-      {/* Footer (simple) */}
       <footer className="mt-20 text-sm text-gray-400">
         © {new Date().getFullYear()} DeutschAgent
       </footer>

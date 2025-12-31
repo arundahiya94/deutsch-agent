@@ -1,196 +1,243 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
-// Mock Link component for single-file use to avoid 'next/link' import error
+// Mock Link component for single-file use (required since we cannot import next/link)
 const Link = ({ href, className, children }) => (
-  <a href={href} className={className}>
+  <a href={href} className={className} onClick={(e) => {
+    // Prevent navigation for demonstration purposes
+    e.preventDefault();
+    console.log(`Navigating to: ${href}`);
+  }}>
     {children}
   </a>
 );
 
-// --- B1 Topics Data with Sequential Learning Order ---
+// --- Emoji Icon Definitions (Consistent 7xl size) ---
+
+// 1. Meinungen & Standpunkte (Opinions & Viewpoints)
+const IconOpinions = () => <span className="text-7xl">🗣️ 🧐</span>;
+// 2. Medien & Digitales (Media & Digital World)
+const IconDigital = () => <span className="text-7xl">💻 🌐</span>;
+// 3. Wichtige Entscheidungen (Important Decisions)
+const IconDecisions = () => <span className="text-7xl">🤔 🎯</span>;
+// 4. Beruf & Karriere (Job & Career)
+const IconCareer = () => <span className="text-7xl">👔 📈</span>;
+// 5. Erzählzeit (Narrative Tenses)
+const IconNarrate = () => <span className="text-7xl">📝 📖</span>;
+// 6. Genitiv & Passiv (Genitive & Passive Voice)
+const IconGrammar = () => <span className="text-7xl">👑 ⚙️</span>;
+// 7. Konsum & Werbung (Consumption & Advertising)
+const IconShopping = () => <span className="text-7xl">🛍️ 📢</span>;
+// 8. Kulturelle Unterschiede (Cultural Differences)
+const IconCulture = () => <span className="text-7xl">🌍 🤝</span>;
+// 9. Bildung & Schule (Education & School)
+const IconEducation = () => <span className="text-7xl">🎓 🏫</span>;
+// 10. Konflikte & Lösungen (Conflicts & Solutions)
+const IconConflicts = () => <span className="text-7xl">😡 🤝</span>;
+
+
+// --- Topic Data (B1) ---
+
 const b1Topics = [
   {
     number: 1,
-    title: "Vergangenheit (Präteritum)",
-    subtitle: "Narrating Stories & History",
-    description: "Mastering the simple past tense (Präteritum) for formal writing and historical narration.",
-    icon: "📜 🏰", // Scroll and Castle
-    path: "/b1/narration",
+    title: "Meinungen & Standpunkte",
+    description: "Expressing opinions, agreement, and disagreement clearly.",
+    icon: <IconOpinions />,
     color: "bg-orange-500", 
+    path: "opinions",
   },
   {
     number: 2,
-    title: "Konjunktiv II",
-    subtitle: "Hypotheticals & Wishes",
-    description: "Expressing desires, giving polite advice, formulating hypothetical scenarios.",
-    icon: "💭 🙏", // Thought Bubble and Praying Hands
-    path: "/b1/hypotheticals",
-    color: "bg-fuchsia-600", 
+    title: "Medien & Digitales",
+    description: "Talking about news, social media, and digital life.",
+    icon: <IconDigital />,
+    color: "bg-cyan-500",
+    path: "media-digital",
   },
   {
     number: 3,
-    title: "Relativsätze",
-    subtitle: "Complex Description",
-    description: "Using relative clauses (der, die, das) to combine sentences and provide detailed descriptions.",
-    icon: "🔗 🧩", // Link and Puzzle Piece
-    path: "/b1/relative",
-    color: "bg-indigo-600", 
+    title: "Wichtige Entscheidungen",
+    description: "Discussing planning, hopes, and life-changing choices.",
+    icon: <IconDecisions />,
+    color: "bg-indigo-500",
+    path: "decisions",
   },
   {
     number: 4,
-    title: "Passive Formen",
-    subtitle: "Focusing on the Action",
-    description: "Understanding and using the passive voice (Vorgangspassiv) in official contexts and news.",
-    icon: "🚧 🗣️", // Construction Barrier and Speaking Head
-    path: "/b1/passive",
-    color: "bg-teal-600", 
+    title: "Beruf & Karriere",
+    description: "Writing applications, resumes, and discussing work history.",
+    icon: <IconCareer />,
+    color: "bg-purple-500",
+    path: "career",
   },
   {
     number: 5,
-    title: "Berufliche Kommunikation",
-    subtitle: "Workplace Independence",
-    description: "Conducting simple job interviews, writing applications, handling professional emails.",
-    icon: "🤝 📈", // Handshake and Stock Chart
-    path: "/b1/workplace",
-    color: "bg-red-500", 
+    title: "Erzählzeit (Präteritum)",
+    description: "Telling stories and reporting past events accurately.",
+    icon: <IconNarrate />,
+    color: "bg-red-500",
+    path: "narrative-tenses",
   },
   {
     number: 6,
-    title: "Umwelt & Nachhaltigkeit",
-    subtitle: "Environment & Sustainability",
-    description: "Discussing environmental issues, conservation, making eco-friendly suggestions.",
-    icon: "🌳 ♻️", // Tree and Recycling Symbol
-    path: "/b1/environment",
-    color: "bg-green-600", 
+    title: "Genitiv & Passiv",
+    description: "Using formal grammar (Genitive/Passive) in written form.",
+    icon: <IconGrammar />,
+    color: "bg-pink-500",
+    path: "genitiv-passiv",
   },
   {
     number: 7,
-    title: "Interkulturelle Themen",
-    subtitle: "Culture, Tradition, & Habits",
-    description: "Comparing cultures, discussing traditions, understanding differences in social behavior.",
-    icon: "🌍 🎭", // Globe and Theatre Masks
-    path: "/b1/culture",
-    color: "bg-yellow-600", 
+    title: "Konsum & Werbung",
+    description: "Analyzing ads, discussing buying habits, and consumerism.",
+    icon: <IconShopping />,
+    color: "bg-green-500",
+    path: "consumption",
   },
   {
     number: 8,
-    title: "Medizin & Soziales",
-    subtitle: "Social Systems & Health Care",
-    description: "Navigating the health care system, discussing insurance, understanding social services.",
-    icon: "🏥 👨‍⚕️", // Hospital and Doctor
-    path: "/b1/social",
-    color: "bg-cyan-700", 
+    title: "Kulturelle Unterschiede",
+    description: "Comparing cultures, customs, and etiquette.",
+    icon: <IconCulture />,
+    color: "bg-teal-500",
+    path: "culture",
   },
   {
     number: 9,
-    title: "Urlaubsplanung & Reisen",
-    subtitle: "Detailed Travel Planning",
-    description: "Planning complex itineraries, discussing travel logistics, handling travel problems.",
-    icon: "🗺️ 🧳", // Map and Luggage
-    path: "/b1/travel_planning",
-    color: "bg-purple-700", 
+    title: "Bildung & Schule",
+    description: "Discussing the school system, education path, and learning.",
+    icon: <IconEducation />,
+    color: "bg-yellow-500",
+    path: "education",
   },
   {
     number: 10,
-    title: "Medienanalyse & Kritik",
-    subtitle: "Analyzing News & Media",
-    description: "Understanding complex newspaper articles, giving balanced critiques, discussing media bias.",
-    icon: "📰 🧐", // Newspaper and Magnifying Glass
-    path: "/b1/media_analysis",
-    color: "bg-gray-700", 
+    title: "Konflikte & Lösungen",
+    description: "Describing problems, negotiating, and finding compromises.",
+    icon: <IconConflicts />,
+    color: "bg-gray-500",
+    path: "conflicts",
   },
 ];
 
-const TopicCard = ({ number, title, subtitle, description, icon, path, color, backgroundImage }) => {
-  const isImageBackground = !!backgroundImage; 
+
+// --- Sub-Components ---
+
+const ActionLink = ({ href, children, color, icon }) => (
+  <Link
+    href={href}
+    className={`flex flex-col items-center justify-center p-3 rounded-lg text-center shadow-md transition hover:scale-[1.03] hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-opacity-50 ${color}`}
+    style={{ minHeight: '80px' }}
+  >
+    <span className="text-2xl">{icon}</span>
+    <span className="text-sm font-semibold mt-1">{children}</span>
+  </Link>
+);
+
+const TopicCard = ({ number, title, description, icon, color, levelPath }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Define the action buttons array
+  const actions = [
+    { name: "Learn", route: `${levelPath}/learn`, color: "bg-indigo-600", icon: "🧠" },
+    { name: "Practice", route: `${levelPath}/practice`, color: "bg-teal-600", icon: "📝" },
+    { name: "Read", route: `${levelPath}/read`, color: "bg-yellow-600", icon: "📚" },
+    { name: "See", route: `${levelPath}/see`, color: "bg-red-600", icon: "📺" },
+  ];
 
   return (
-    <Link
-      href={path}
-      className={`
-        group flex flex-col p-6 w-full h-full min-h-[200px]
-        rounded-2xl shadow-lg transition transform hover:scale-[1.02] duration-300
-        relative overflow-hidden cursor-pointer text-left
-        text-white
-        ${isImageBackground ? 'bg-gray-800' : color} 
-      `}
-      style={{ 
-        backgroundImage: isImageBackground ? `url(${backgroundImage})` : 'none',
-        backgroundSize: isImageBackground ? 'cover' : 'auto',
-        backgroundPosition: isImageBackground ? 'center' : 'auto',
-      }}
-    >
-      {/* Overlay for text readability on image backgrounds */}
-      {isImageBackground && (
-        <div className={`absolute inset-0 ${color} opacity-70 group-hover:opacity-80 transition duration-300 rounded-2xl`}></div>
-      )}
-
-      {/* Content wrapper to ensure text is above the background/overlay */}
-      <div className="relative z-10 flex flex-col h-full">
-        {/* Number and Icon */}
-        <div className="flex items-center mb-3">
-          <span className="text-3xl font-extrabold mr-3">{number}.</span>
-          <div className="text-7xl transition-all group-hover:rotate-3 duration-300 leading-none"> 
-              {icon}
-          </div>
+    <div className="rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden bg-white border-4 border-white">
+      
+      {/* Main Card Header (Clickable Area) */}
+      <div 
+        className={`p-6 cursor-pointer ${color} text-white transition duration-300 ease-in-out`}
+        onClick={() => setIsExpanded(!isExpanded)}
+        style={{
+            minHeight: '150px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center',
+        }}
+      >
+        <div className="flex items-center justify-center space-x-4 w-full">
+            <span className="text-4xl font-extrabold opacity-70">
+                {number}.
+            </span>
+            <div className="text-center">
+                <h2 className="text-2xl font-bold">{title}</h2>
+                <p className="text-sm opacity-90 mt-1">{description}</p>
+            </div>
         </div>
-        
-        {/* Titles */}
-        <h2 className="text-2xl font-bold tracking-tight mt-1">{title}</h2>
-        <h3 className="text-sm font-medium uppercase opacity-80 mb-2">{subtitle}</h3>
-        
-        {/* Description */}
-        <p className="mt-2 text-sm opacity-90">
-          {description}
-        </p>
-
-        {/* CTA Arrow */}
-        <div className="mt-auto pt-3 text-sm font-semibold flex items-center">
-            Generate Content 
-            <span className="ml-2 transition-transform group-hover:translate-x-1 duration-300">→</span>
+        <div className="mt-2 text-center">
+            {icon}
         </div>
       </div>
-    </Link>
+
+      {/* Action Bar (Expanded Content) */}
+      <div 
+        className={`p-4 transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden bg-gray-50`}
+      >
+        <div className="grid grid-cols-2 gap-3">
+          {actions.map((action, index) => (
+            <Link
+              key={index}
+              href={action.route}
+              className={`
+                flex flex-col items-center justify-center p-3 rounded-lg text-center
+                ${action.color} text-white shadow-md transition hover:scale-[1.03] 
+                hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-opacity-50
+              `}
+              style={{ minHeight: '80px' }}
+            >
+              <span className={`text-2xl`}>{action.icon}</span>
+              <span className="text-sm font-semibold mt-1">{action.name}</span>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-4 text-center text-xs text-gray-500">
+             <span className="font-semibold">Click the card header again to close.</span>
+        </div>
+      </div>
+    </div>
   );
 };
 
 
+// --- Main Component ---
+
 const B1TopicsPage = () => {
+  const level = "B1";
+  const levelDescription = "You can understand the main points of clear standard input on familiar matters regularly encountered in work, school, leisure, etc.";
+
   return (
-    <main className="flex min-h-screen flex-col items-center px-4 py-16 bg-gray-100">
-      
-      {/* Header and Back Button */}
-      <div className="w-full max-w-7xl mb-8">
-        <Link 
-          href="/" 
-          className="text-indigo-600 hover:text-indigo-800 transition duration-150 font-medium flex items-center"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 mr-1">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-          </svg>
-          Back to Levels
-        </Link>
+    <main className="flex min-h-screen flex-col items-center px-4 py-16 bg-gray-50">
+      <div className="w-full max-w-6xl">
+        <h1 className="text-5xl font-extrabold text-gray-900 text-center mb-4">
+          Deutsch Agent: <span className="text-indigo-600">{level} Topics</span>
+        </h1>
+        <p className="max-w-3xl mx-auto text-gray-600 text-lg text-center mb-12">
+          {levelDescription}
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {b1Topics.map((topic) => (
+            <TopicCard
+              key={topic.number}
+              number={topic.number}
+              title={topic.title}
+              description={topic.description}
+              icon={topic.icon}
+              color={topic.color}
+              levelPath={`/level/${level.toLowerCase()}/${topic.path}`}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Title Section */}
-      <h1 className="bg-gradient-to-r from-indigo-600 to-pink-600 bg-clip-text text-5xl font-extrabold text-transparent sm:text-6xl text-center">
-        B1: Independent Topics
-      </h1>
-      
-      <p className="mt-4 max-w-3xl text-gray-600 text-lg text-center mb-12">
-        Become an independent user! Master complex grammar (clauses, tenses) and navigate most everyday situations confidently.
-      </p>
-
-      {/* Topics Grid (2 columns on small/medium, 3 on large) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl p-4">
-        {b1Topics.map((topic) => (
-          <TopicCard key={topic.number} {...topic} />
-        ))}
-      </div>
-
-      {/* Footer (simple) */}
       <footer className="mt-20 text-sm text-gray-400">
         © {new Date().getFullYear()} DeutschAgent
       </footer>
